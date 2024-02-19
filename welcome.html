@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Welcome</title>
+    </head>
+    <body>
+        <div id="app">
+            <div class="box">
+                <div style="font-size: 100px; font-weight: 800;">
+                    welcome!
+                </div>
+                <div style="font-size: 50px;">
+                    Just a simple VR game
+                </div>
+                <a-button ghost @click="jump" class="button">next >></button>
+            </div>
+        </div>
+    </body>
+    <script src="./src/js/vue.global.js"></script>
+    <script src="./src/js/dayjs.min.js"></script>
+    <script src="./src/js/customParseFormat.js"></script>
+    <script src="./src/js/weekday.js"></script>
+    <script src="./src/js/localeData.js"></script>
+    <script src="./src/js/weekOfYear.js"></script>
+    <script src="./src/js/weekYear.js"></script>
+    <script src="./src/js/advancedFormat.js"></script>
+    <script src="./src/js/quarterOfYear.js"></script>  
+    <script src="./src/js/antd.min.js"></script>
+    <script type="module">
+        const app = Vue.createApp({
+            setup() {
+                function jump() {
+                    window.location.href = "/index.html";
+                }
+                return {
+                    jump
+                }
+            }
+        });
+        app.use(antd);
+        app.mount('#app');
+    </script>
+</html>
+
+<style>
+    html, body {
+        height: 99%;
+    }
+    #app {
+        width: 100%;
+        height: 100%;
+        background-image: url(./src/pictures/background4.jpg);
+        background-size: cover;
+        animation: moveBackground 20s infinite ease-out;/
+    }
+    .box {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.5);
+    } 
+    @keyframes moveBackground {
+        0% {
+            background-position: center top;
+        }
+        50% {
+            background-position: center bottom;
+        }
+        100% {
+            background-position: center top;
+        }
+    }
+    .button{
+        margin-top: 30px;
+        width: 150px;
+        height: 50px;
+        font-size: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

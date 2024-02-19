@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Game</title>
+    </head>
+    <body>
+        <div id="app">
+            <a-layout style="height: 100%;">
+                <a-layout-header>
+                    <div class="logo">VRGame</div>
+                    <a-dropdown>
+                        <a class="ant-dropdown-link" @click.prevent>
+                            <img id="avator" src="./src/pictures/avatar.jpg" alt="avator"></img>
+                            <DownOutlined />
+                        </a>
+                        <template #overlay>
+                            <a-menu>
+                                <a-menu-item>
+                                    <a href="/index.html">logout</a>
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
+                </a-layout-header>
+                <a-layout>
+                    <a-layout-content class="content">
+                        <div class="box">
+                            <iframe src="./VRProject1.html" width="80%" height="100%"></iframe>
+                        </div>
+                    </a-layout-content>
+                </a-layout>
+            </a-layout>
+        </div>
+    </body>
+    <script src="./src/js/vue.global.js"></script>
+    <script src="./src/js/dayjs.min.js"></script>
+    <script src="./src/js/customParseFormat.js"></script>
+    <script src="./src/js/weekday.js"></script>
+    <script src="./src/js/localeData.js"></script>
+    <script src="./src/js/weekOfYear.js"></script>
+    <script src="./src/js/weekYear.js"></script>
+    <script src="./src/js/advancedFormat.js"></script>
+    <script src="./src/js/quarterOfYear.js"></script>  
+    <script src="./src/js/antd.min.js"></script>
+    <script type="module">
+        const app = Vue.createApp({});
+        app.use(antd);
+        app.mount('#app');
+    </script>
+</html>
+
+<style>
+    html, body {
+      height: 99%;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+    #avator {
+        width: 42px;
+        border-radius: 50%;
+        margin-top: 10px;
+    }
+    .logo {
+        float: left;
+        width: 120px;
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+    }
+    .ant-row-rtl #components-layout-demo-top .logo {
+        float: right;
+        margin: 16px 0 16px 24px;
+    }
+    .ant-dropdown-link {
+        height: 64px;
+        float: right;
+    }
+    [data-theme='dark'] .site-layout-content {
+        background: #141414;
+    }
+    .content {
+      margin: 24px 16px;
+      background: #fff;
+      background-image: url(./src/pictures/background5.jpg);
+    }
+    .box {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+</style>

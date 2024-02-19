@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Register</title>
+    </head>
+    <body>
+        <div id="app">
+            <a-layout style="height: 100%;">
+                <a-layout-content
+                :style="{ margin: '24px 16px', background: '#fff', minHeight: '280px'}"
+                >
+                    <div class="box1">
+                        <div class="box2"> 
+                            <div class="login-ui">
+                              <div class="login-title">
+                                  <span>注 册</span>
+                              </div>
+                              <a-form
+                              :model="formState"
+                              name="basic"
+                              :label-col="{ span: 8 }"
+                              :wrapper-col="{ span: 16 }"
+                              autocomplete="off"
+                              @finish="onFinish"
+                              @finishFailed="onFinishFailed"
+                              >
+                                <a-form-item
+                                  label="Username"
+                                  name="username"
+                                  :rules="[{ required: true, message: 'Please input your username!' }]"
+                                >
+                                  <a-input v-model:value="formState.username" @click="reset"/>
+                                </a-form-item>
+                          
+                                <a-form-item
+                                  label="Password"
+                                  name="password"
+                                  :rules="[{ required: true, message: 'Please input your password!' }]"
+                                >
+                                  <a-input-password v-model:value="formState.password" @click="reset"/>
+                                </a-form-item>
+
+                                <p v-show="clicked" style="color: green; margin-left: 62px;">registration successful!</p>
+                                <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+                                  <a-button type="primary" html-type="submit" @click="register" class="register">Register</a-button>
+                                  <a href="/index.html" @click="clicked.value=false">back to login</a>
+                                </a-form-item>
+
+                              </a-form>
+                            </div>
+                        </div>
+                    </div>
+                </a-layout-content>
+            </a-layout>
+        </div>
+    </body>
+    <script src="./src/js/vue.global.js"></script>
+    <script src="./src/js/dayjs.min.js"></script>
+    <script src="./src/js/customParseFormat.js"></script>
+    <script src="./src/js/weekday.js"></script>
+    <script src="./src/js/localeData.js"></script>
+    <script src="./src/js/weekOfYear.js"></script>
+    <script src="./src/js/weekYear.js"></script>
+    <script src="./src/js/advancedFormat.js"></script>
+    <script src="./src/js/quarterOfYear.js"></script>  
+    <script src="./src/js/antd.min.js"></script>
+    <script src="./src/js/confetti.js"></script>
+    <script type="module">
+        const confetti = new JSConfetti();
+        const app = Vue.createApp({
+            setup() {
+                const clicked = Vue.ref(false);
+                const formState = Vue.reactive({
+                    username: '',
+                    password: ''
+                });
+                const onFinish = values => {
+                    console.log('Success:', values);
+                };
+                const onFinishFailed = errorInfo => {
+                    console.log('Failed:', errorInfo);
+                };
+                function register() {
+                    if(formState.username&&formState.password){
+                        sessionStorage.setItem('user',JSON.stringify(formState));
+                        clicked.value = true;
+                        confetti.addConfetti();
+                    }
+                }
+                function reset() {
+                    if(clicked.value)
+                        clicked.value = false;
+                }
+                return {
+                    formState,
+                    clicked,
+                    onFinish,
+                    onFinishFailed,
+                    register,
+                    reset
+                }
+            }
+        });
+        app.use(antd);
+        app.mount('#app');
+    </script>
+</html>
+
+<style>
+  html, body {
+      height: 99%;
+  }
+  #app {
+    width: 100%;
+    height: 100%;
+  }
+  .login-ui {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    height: 45%;
+    padding-right: 70px;
+    padding-bottom: 35px;
+    border-radius: 8px;
+    box-shadow: 0 0 3px 0 rgb(65 69 73 / 30%);
+    background-color: rgba(255, 255, 255 ,0.8);
+  }
+  .login-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    left: 6.6%;
+  }
+  .register {
+    margin-right: 20px;
+  }
+  .box1 {
+      height: 100%;
+      width: 100%;
+      background-image: url(./src/pictures/background2.jpg);
+  }
+  .box2 {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.5);
+  }
+</style>

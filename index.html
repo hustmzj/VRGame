@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>App</title>
+    </head>
+    <body>
+        <div id="app">
+            <Transition mode="out-in">
+                <a-layout v-if="unlogin" style="height: 100%;">
+                    <a-layout-sider>
+                        <div class="logo">
+                          VRGame
+                        </div>
+                        <a-menu v-model:selected-keys="selectedKeys" theme="dark" mode="inline">
+                            <a-menu-item key="1">
+                                <user-outlined />
+                                <span>Login</span>
+                            </a-menu-item>
+                            <a-menu-item key="2">
+                                <video-camera-outlined />
+                                <span>About</span>
+                            </a-menu-item>
+                        </a-menu>
+                    </a-layout-sider>
+                    <a-layout>
+                        <a-layout-content
+                          :style="{ margin: '24px 16px', background: '#fff', minHeight: '280px'}"
+                        >
+                            <div class="box1" id="box"> 
+                                <div class="box2" id="box">
+                                    <Transition mode="out-in">
+                                        <div v-if="selectedKeys[0]==='1'" class="box5" id="box">
+                                            <div style="font-size: 35px; font-weight: 500; margin-bottom: 25px;">
+                                                Please Login First!
+                                            </div>
+                                            <div class="login-ui">
+                                                <div class="login-title">
+                                                    <span>登 录</span>
+                                                </div>
+                                                <a-form
+                                                :model="formState"
+                                                name="normal_login"
+                                                class="login-form"
+                                                @finish="onFinish"
+                                                @finishFailed="onFinishFailed"
+                                                >
+                                                    <a-form-item
+                                                      label="Username"
+                                                      name="username"
+                                                      :rules="[{ required: true, message: 'Please input your username!' }]"
+                                                    >
+                                                      <a-input v-model:value="formState.username" @click="reset">
+                                                        <template #prefix>
+                                                          <UserOutlined class="site-form-item-icon" />
+                                                        </template>
+                                                      </a-input>
+                                                    </a-form-item>
+                                            
+                                                    <a-form-item
+                                                      label="Password"
+                                                      name="password"
+                                                      :rules="[{ required: true, message: 'Please input your password!' }]"
+                                                    >
+                                                      <a-input-password v-model:value="formState.password" @click="reset">
+                                                        <template #prefix>
+                                                          <LockOutlined class="site-form-item-icon" />
+                                                        </template>
+                                                      </a-input-password>
+                                                    </a-form-item>
+                                                    <p v-show="clicked&&unlogin" style="color: red;">Incorrect username or password!</p>
+                                                    <a-form-item>
+                                                      <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button" @click="login" style="margin-left: 83px;">
+                                                        Log in
+                                                      </a-button>
+                                                      Or
+                                                      <a href="/register.html">register now!</a>
+                                                    </a-form-item>
+                                                </a-form>
+                                            </div>
+                                        </div>
+                                        <div v-else class="text">
+                                            About......
+                                            (1)
+                                            (2)
+                                        </div>
+                                    </Transition>
+                                </div>
+                            </div>
+                        </a-layout-content>
+                    </a-layout>
+                </a-layout>
+
+                <div v-else class="box3" id="box">
+                    <div class="box4" id="box">
+                        <a-result
+                        v-else
+                        status="success"
+                        title="Login Incorrect Successful!"
+                        sub-title="You can choose to play now or later!"
+                        >
+                            <div style="display: flex; justify-content: center;">
+                                <a-button key="console" type="primary" style="margin-right: 20px;" @click="jump">play now!</a-button>
+                                <a-button key="buy" @click="logout">not now</a-button>
+                            </div>
+                        </a-result>
+                    </div>
+                </div>
+            </Transition>
+        </div>
+    </body>
+    <script src="./src/js/vue.global.js"></script>
+    <script src="./src/js/dayjs.min.js"></script>
+    <script src="./src/js/customParseFormat.js"></script>
+    <script src="./src/js/weekday.js"></script>
+    <script src="./src/js/localeData.js"></script>
+    <script src="./src/js/weekOfYear.js"></script>
+    <script src="./src/js/weekYear.js"></script>
+    <script src="./src/js/advancedFormat.js"></script>
+    <script src="./src/js/quarterOfYear.js"></script>  
+    <script src="./src/js/antd.min.js"></script>
+    <script src="./src/js/confetti.js"></script>
+    <script type="module">
+        const confetti = new JSConfetti();
+        const app = Vue.createApp({
+            setup() {
+                const unlogin = Vue.ref(true)
+                const clicked = Vue.ref(false)
+                const data = JSON.parse(sessionStorage.getItem('user'))
+                const user = Vue.ref(data)
+                const selectedKeys = Vue.ref(['1'])
+                const formState = Vue.reactive({
+                    username: '',
+                    password: ''
+                });
+                const onFinish = values => {
+                    console.log('Success:', values);
+                };
+                const onFinishFailed = errorInfo => {
+                    console.log('Failed:', errorInfo);
+                };
+                const disabled = Vue.computed(() => {
+                    return !(formState.username && formState.password);
+                });
+                function login() {
+                    if(user.value){
+                        if(user.value.username === formState.username && user.value.password === formState.password) {
+                            unlogin.value =! unlogin.value;
+                        }
+                    }
+                    clicked.value = true;
+                }
+                function logout() {
+                    unlogin.value =! unlogin.value;
+                    clicked.value = false;
+                }
+                function reset() {
+                    if(clicked.value)
+                        clicked.value = false;
+                }
+                function jump() {
+                    window.location.href = "/game.html";
+                }
+                Vue.watch(
+                    [() => unlogin.value, () => clicked.value], ([bool1, bool2]) => {
+                        if((!bool1)&&bool2) {
+                            confetti.addConfetti();
+                        }
+                    }
+                )
+                return {
+                    unlogin,
+                    clicked,
+                    formState,
+                    selectedKeys,
+                    onFinish,
+                    onFinishFailed,
+                    disabled,
+                    login,
+                    logout,
+                    reset,
+                    jump
+                }
+            }
+        });
+        app.use(antd);
+        app.mount('#app');
+        //https://cdn.bootcdn.net/ajax/libs/ant-design-vue/4.1.2/antd.min.js
+        //https://unpkg.com/vue@3.3.0/dist/vue.global.js
+        //https://unpkg.com/dayjs/dayjs.min.js
+        //https://unpkg.com/dayjs/plugin/customParseFormat.js
+        //https://unpkg.com/dayjs/plugin/weekday.js
+        //https://unpkg.com/dayjs/plugin/localeData.js
+        //https://unpkg.com/dayjs/plugin/weekOfYear.js
+        //https://unpkg.com/dayjs/plugin/weekYear.js
+        //https://unpkg.com/dayjs/plugin/advancedFormat.js
+        //https://unpkg.com/dayjs/plugin/quarterOfYear.js
+    </script>
+</html>
+
+<style>
+    #components-form-demo-normal-login .login-form {
+      max-width: 300px;
+    }
+    #components-form-demo-normal-login .login-form-forgot {
+      float: right;
+    }
+    #components-form-demo-normal-login .login-form-button {
+      width: 100%;
+    }
+    html, body {
+      height: 99%;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+    .login-ui {
+      display: flex;
+      flex-direction: column;
+      width: 45%;
+      height: 45%;
+      padding-left: 70px;
+      padding-right: 70px;
+      padding-bottom: 35px;
+      border-radius: 8px;
+      box-shadow: 0 0 3px 0 rgb(65 69 73 / 30%);
+      background-color: rgba(255, 255, 255 ,0.8);
+    }
+    .login-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .logo {
+      height: 32px;
+      margin: 16px;
+      color: white;
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+    }
+    #components-layout-demo-custom-trigger .trigger {
+      font-size: 18px;
+      line-height: 64px;
+      padding: 0 24px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }  
+    #components-layout-demo-custom-trigger .trigger:hover {
+      color: #1890ff;
+    }  
+    .site-layout .site-layout-background {
+      background: #fff;
+    }
+    #box {
+      height: 100%;
+      width: 100%;
+    }
+    .box1 {
+      background-image: url(./src/pictures/background1.jpg);
+      background-size: cover;
+    }
+    .box2 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    .box3 {
+      background-image: url(./src/pictures/background3.jpg);
+      background-size: cover;
+    }
+    .box4 {
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+    .box5 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .v-enter-active,
+    .v-leave-active {
+      transition: opacity 0.5s ease;
+    }
+    .v-enter-from,
+    .v-leave-to {
+      opacity: 0;
+    }
+    .welcomepage {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: blanchedalmond;
+    }
+    .text {
+      width: 90%;
+      height: 90%;
+    }
+</style>
